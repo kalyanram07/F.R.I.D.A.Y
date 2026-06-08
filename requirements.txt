@@ -1,0 +1,13 @@
+google-antigravity
+faster-whisper
+sounddevice
+numpy
+pydantic
+pygetwindow
+pywin32
+fastapi
+uvicorn
+python-dotenv
+requests
+aiohttp
+pyttsx3
