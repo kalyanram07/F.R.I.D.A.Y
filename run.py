@@ -63,14 +63,31 @@ async def consume_audio_loop(engine: AudioIngestionEngine):
                 # 3. Parse Response
                 if "error" in response:
                     reply = f"Network Error: {response['error']}"
+                    print(f"[F.R.I.D.A.Y]: {reply}")
+                    memory.add_assistant_message(reply)
+                    await synth.speak(reply)
                 else:
-                    reply = response.get("text", "I did not understand the response.")
-                
-                print(f"[F.R.I.D.A.Y]: {reply}")
-                memory.add_assistant_message(reply)
-                
-                # 4. Speak (Background Thread)
-                await synth.speak(reply)
+                    tool_calls = response.get("tool_calls", [])
+                    reply = response.get("text", "")
+                    
+                    if tool_calls:
+                        from app.automation.monitor_tools import WindowAutomation
+                        for tool in tool_calls:
+                            if tool.get("name") == "move_window":
+                                print(f"[System] Intercepted Tool Call: move_window")
+                                result = WindowAutomation.move_window(tool.get("arguments", {}))
+                                print(f"[System Tool Result]: {result}")
+                                memory.add_assistant_message(f"Action Executed: {result}")
+                                if not reply:
+                                    reply = "Action complete."
+
+                    if reply:
+                        print(f"[F.R.I.D.A.Y]: {reply}")
+                        memory.add_assistant_message(reply)
+                        
+                        # 4. Speak (Background Thread)
+                        await synth.speak(reply)
+                        
                 print("\n[System] Listening...")
 
 async def main():
