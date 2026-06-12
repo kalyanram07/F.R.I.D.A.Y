@@ -1,5 +1,9 @@
 import pygetwindow as gw
 from pydantic import BaseModel, Field
+import psutil
+import webbrowser
+import os
+import time
 
 # Pydantic struct typing enforces valid parameters for our tools
 class MoveWindowParams(BaseModel):
@@ -32,3 +36,34 @@ class WindowAutomation:
             return f"Successfully moved '{target_win.title}' to ({validated_params.x}, {validated_params.y})"
         except Exception as e:
             return f"Failed to move window: {str(e)}"
+
+    @staticmethod
+    def launch_dashboard(params: dict = None) -> str:
+        """
+        Launches the F.R.I.D.A.Y web dashboard.
+        """
+        try:
+            dashboard_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "web_dashboard", "dist", "index.html"))
+            webbrowser.open(f"file:///{dashboard_path.replace(chr(92), '/')}")
+            
+            # Allow time for the browser to launch
+            time.sleep(2)
+            
+            return "Successfully launched Web Dashboard."
+        except Exception as e:
+            return f"Failed to launch dashboard: {str(e)}"
+
+    @staticmethod
+    def get_system_telemetry(params: dict = None) -> str:
+        """
+        Returns basic system telemetry (CPU and RAM usage).
+        """
+        try:
+            cpu_usage = psutil.cpu_percent(interval=0.5)
+            ram = psutil.virtual_memory()
+            ram_usage = ram.percent
+            ram_total = round(ram.total / (1024**3), 2)
+            ram_used = round(ram.used / (1024**3), 2)
+            return f"CPU Usage: {cpu_usage}% | RAM Usage: {ram_usage}% ({ram_used}GB / {ram_total}GB)"
+        except Exception as e:
+            return f"Failed to get system telemetry: {str(e)}"

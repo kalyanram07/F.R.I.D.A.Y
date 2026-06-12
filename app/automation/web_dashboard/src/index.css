@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #000000;
+  color: #f0f4ff;
+  overflow: hidden;
+}
+
+/* Custom Table Resets for Ant Design */
+.custom-table-wrapper .ant-table {
+  background: transparent !important;
+}
+.custom-table-wrapper .ant-table-thead > tr > th {
+  border-bottom: 1px solid rgba(0, 240, 255, 0.2) !important;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.custom-table-wrapper .ant-table-tbody > tr > td {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  font-size: 12px;
+}
+.custom-table-wrapper .ant-table-tbody > tr:hover > td {
+  background: rgba(0, 240, 255, 0.05) !important;
+}

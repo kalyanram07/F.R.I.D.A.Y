@@ -11,3 +11,4 @@ python-dotenv
 requests
 aiohttp
 pyttsx3
+psutil

@@ -73,9 +73,17 @@ async def consume_audio_loop(engine: AudioIngestionEngine):
                     if tool_calls:
                         from app.automation.monitor_tools import WindowAutomation
                         for tool in tool_calls:
-                            if tool.get("name") == "move_window":
-                                print(f"[System] Intercepted Tool Call: move_window")
+                            tool_name = tool.get("name")
+                            print(f"[System] Intercepted Tool Call: {tool_name}")
+                            result = ""
+                            if tool_name == "move_window":
                                 result = WindowAutomation.move_window(tool.get("arguments", {}))
+                            elif tool_name == "launch_dashboard":
+                                result = WindowAutomation.launch_dashboard(tool.get("arguments", {}))
+                            elif tool_name == "get_system_telemetry":
+                                result = WindowAutomation.get_system_telemetry(tool.get("arguments", {}))
+                            
+                            if result:
                                 print(f"[System Tool Result]: {result}")
                                 memory.add_assistant_message(f"Action Executed: {result}")
                                 if not reply:
